@@ -1,0 +1,39 @@
+---
+output: findppp
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# findppp
+
+The goal of findppp is to extract out useful purchasing power parity information from an online repository updated by the OECD. 
+
+## Installation
+
+You can install the released version of findppp from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("findppp")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+#I want to call the PPP of Australia in 1999
+
+findppp("AUS","1999")
+
+#NOTE: PPP information is based on NATUSD (or based of the USD)
+```
+
+To find a full repository of OECD data, just download a related library using install.packages("OECD").

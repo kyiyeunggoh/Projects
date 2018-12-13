@@ -1,0 +1,34 @@
+Package: electuk1920s
+Type: Package
+Title: Database of UK General Election data from 1920-1930
+Version: 0.1.0
+Author: Kyi Yeung Goh
+Maintainer: Kyi Yeung Goh <kg2769@columbia.edu>
+Description: [PROJECT 1A] This package will allow you to build a database, which is included as an RDS file in the repo, of 1920s election data. This includes the 1922,1923,1924 and 1929 General Elections. This is done by webscraping HTML data from Wikipedia and politicsresources.com. This contains data on the year, candidates, parties,constituencies, swing and margins of each seat. I have also called on the Google Maps API to match the geographical data of the area. As such, it is advisable for the user to obtain an API google maps key before starting.This data is useful for historians and political scientists seeking to analyse changes in voting behaviour during a period of political transition in the United Kingdom. This dataset complements existing efforts in GitHub to document election data relating to the United Kingdom. The most complete database (going back to 1950) can be found here: https://github.com/ijmbarr/UKElectionData/tree/master/GeneralElections. Two functions are included in the data - polres_scrape and get_latlong. 
+License: MIT + File License 
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    rvest,
+    plyr,
+    dplyr,
+    stringr,
+    xml2,
+    httr,
+    data.table,
+    XML,
+    rebus,
+    RJSONIO,
+    gtools,
+    foreach,
+    reshape,
+    googleway,
+    nlme,
+    car,
+    tidyr,
+    magrittr
+RoxygenNote: 6.1.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

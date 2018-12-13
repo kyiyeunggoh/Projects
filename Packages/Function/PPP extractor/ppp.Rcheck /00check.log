@@ -1,0 +1,87 @@
+* using log directory ‘/Users/pyeungyeung/Desktop/ppp.Rcheck’
+* using R version 3.5.1 (2018-07-02)
+* using platform: x86_64-apple-darwin15.6.0 (64-bit)
+* using session charset: UTF-8
+* using options ‘--no-manual --as-cran’
+* checking for file ‘ppp/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘ppp’ version ‘0.1.0’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking serialization versions ... OK
+* checking whether package ‘ppp’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking ‘build’ directory ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Malformed Title field: should not end in a period.
+Invalid license file pointers: LICENSE
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+econdata: no visible global function definition for ‘%>%’
+econdata: no visible global function definition for ‘filter’
+econdata: no visible binding for global variable ‘country’
+econdata: no visible binding for global variable ‘year’
+Undefined global functions or variables:
+  %>% country filter year
+Consider adding
+  importFrom("stats", "filter")
+to your NAMESPACE file.
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... WARNING
+Warning: parse error in file 'ppp-Ex.R':
+4: unexpected symbol
+20: 
+21: To retrieve
+       ^
+* checking installed files from ‘inst/doc’ ... OK
+* checking files in ‘vignettes’ ... OK
+* checking examples ... ERROR
+Running examples in ‘ppp-Ex.R’ failed
+The error most likely occurred in:
+
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: findppp
+> ### Title: PPP extractor function
+> ### Aliases: findppp
+> ### Keywords: PPP, data, economic year
+> 
+> ### ** Examples
+> 
+> To retrieve PPP data for a particular year, just specify the country then year
+Error: unexpected symbol in "To retrieve"
+Execution halted
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes in ‘inst/doc’ ... OK
+* checking re-building of vignette outputs ... OK
+* DONE
+Status: 1 ERROR, 1 WARNING, 2 NOTEs

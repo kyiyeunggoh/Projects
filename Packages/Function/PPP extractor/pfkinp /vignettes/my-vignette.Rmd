@@ -1,0 +1,15 @@
+---
+title: "Guide to using the findppp package"
+author: "Kyi Yeung Goh"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+It is often difficult to manually trawl through economic data as a variable especially when manipulating them into a new dataset. findppp was created to solve this and other related problems. Purchasing power parity (PPP) is a neoclassical economic theory that states that the exchange rate between two countries is equal to the ratio of the currencies' respective purchasing power. Theories that invoke the purchasing power parity assume that in some circumstances (for example, as a long-run tendency) it would cost exactly the same number of, for example, US dollars to buy euros and then buy a market basket of goods as it would cost to directly purchase the market basket of goods with dollars. A fall in either currency's purchasing power would lead to a proportional decrease in that currency's valuation on the foreign exchange market.
+
+The information is updated real-time (courtesy of an API created in R by Eric Persson). Although OECD is avaiable as a package and contains a wealth of intereting data, it can be dauting and rather inefficient to access then extract specific commonly-used variables. In this case, ppp is the variable we are concerned with. This ppp data uses the USD as a benchmark indicator.
+
+To use it, one simply has to type in findppp("country","year"). This will return a dataframe with the information entered along with the PPP data. 

@@ -1,0 +1,14 @@
+---
+title: "Guide to using the electuk1920s package"
+author: "Kyi Yeung Goh"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+This package will allow you to build a database, which is included as an RDS file in the repo, of 1920s election data. This includes the 1922,1923,1924 and 1929 General Elections. This is done by webscraping HTML data from Wikipedia and politicsresources.com. This contains data on the year, candidates, parties,constituencies, swing and margins of each seat. I have also called on the Google Maps API to match the geographical data of the area. As such, it is advisable for the user to obtain an API google maps key before starting.This data is useful for historians and political scientists seeking to analyse changes in voting behaviour during a tumultuous period of political transition in the United Kingdom. This dataset complements existing efforts in GitHub to document election data relating to the United Kingdom. The most complete database (going back to 1950) can be found here: https://github.com/ijmbarr/UKElectionData/tree/master/GeneralElections. 
+
+In this package there are two more generalisable functions embedded within it. The first, *polres_scrape* calls on the Political Resources website for its HTML data and then parses it into a nice frame. The second, *get_latlong*, can be used to call the longitudinal and latitudinal data of any location one keys into the function. 
+

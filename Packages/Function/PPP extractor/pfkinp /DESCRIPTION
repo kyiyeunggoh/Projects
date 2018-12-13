@@ -1,0 +1,18 @@
+Package: findppp
+Type: Package
+Title: The package extracts PPP (Purchasing Power Parity) for a particular year and country based on OECD's latest database. 
+Version: 0.1.0
+Author: Kyi, Goh
+Maintainer: The package maintainer <kg2769@columbia.edu>
+Description: The package builds on the OECD R package by Eric Persson. It has cleaned the information using the dplyr package and created a function that, when provided with a country code (available from OECD) and year, will provide PPP data for that particular observation.    
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    OECD,
+    dplyr
+RoxygenNote: 6.1.0.9000
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
