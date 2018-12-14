@@ -19,16 +19,12 @@ Imports:
     XML,
     rebus,
     RJSONIO,
-    gtools,
     foreach,
     reshape,
-    googleway,
     nlme,
     car,
     tidyr,
-    magrittr,
-    kableExtra,
-    ggmap
+    magrittr
 RoxygenNote: 6.1.1
 Suggests: 
     knitr,

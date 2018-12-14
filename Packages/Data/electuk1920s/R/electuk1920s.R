@@ -22,11 +22,13 @@
 #' @example get_latlong("Columbia University, New York")
 #' @export
 
-
+library(devtools)
+library(roxygen2)
+library(testthat)
 library(rvest)
 library(plyr)
 library(dplyr)
-library(kableExtra)
+library(tidyverse)
 library(stringr)
 library(xml2)
 library(httr)
@@ -35,11 +37,9 @@ library(XML)
 library(httr)
 library(rebus)
 library(RJSONIO)
-library(googleway)
-library(gtools)
-library(ggmap)
 library(foreach)
 library(reshape)
+
 
 # Creating loop to extract 1922 data
 datalist=list()
@@ -210,6 +210,7 @@ colnames(election1920sdb)[7]<-"Latitude"
 colnames(election1920sdb)[8]<-"Longitude"
 
 saveRDS(election1920sdb, file="election1920sdb.rds")
+usethis::use_data(election1920sdb, overwrite=TRUE)
 
 # Some descriptive statistics of the data
 #Average vote swings for contested constituencies in 1920s
