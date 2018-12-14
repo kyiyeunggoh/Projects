@@ -14,6 +14,7 @@
 #' @param url Provide a URL link to one of political res's subpages
 #' @keywords election, table data
 #' @example polres_scrape("http://www.politicsresources.net/area/uk/ge1924/i01.html")
+#' @export
 #'
 #' @name get_latlong
 #' @param area Provide an area name for the function to retrieve data.
@@ -21,13 +22,10 @@
 #' @example get_latlong("Columbia University, New York")
 #' @export
 
-library(devtools)
-library(roxygen2)
-library(testthat)
+
 library(rvest)
 library(plyr)
 library(dplyr)
-library(tidyverse)
 library(kableExtra)
 library(stringr)
 library(xml2)
@@ -42,7 +40,6 @@ library(gtools)
 library(ggmap)
 library(foreach)
 library(reshape)
-
 
 # Creating loop to extract 1922 data
 datalist=list()

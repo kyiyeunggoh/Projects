@@ -27,7 +27,8 @@ Imports:
     car,
     tidyr,
     magrittr,
-    kableExtra
+    kableExtra,
+    ggmap
 RoxygenNote: 6.1.1
 Suggests: 
     knitr,
