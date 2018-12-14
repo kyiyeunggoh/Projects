@@ -26,7 +26,8 @@ Imports:
     nlme,
     car,
     tidyr,
-    magrittr
+    magrittr,
+    kableExtra
 RoxygenNote: 6.1.1
 Suggests: 
     knitr,
