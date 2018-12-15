@@ -1,2 +1,3 @@
 load("/Users/pyeungyeung/Desktop/electuk1920s/data/election1920sdb.rds")
 load("/Users/pyeungyeung/Downloads/Goh_KyiYeung/Final Project/electuk1920s/data/election1920sdb.rda")
+load("/Users/pyeungyeung/Downloads/Goh_KyiYeung/Final Project/electuk1920s/data/election1920sdb.rds")

@@ -14,7 +14,18 @@ knitr::opts_chunk$set(
 ```
 # electuk1920s
 
-The goal of electuk1920s database is to allow you to build a database, which is included as an RDS file in the repo, of 1920s election data. This includes the 1922,1923,1924 and 1929 General Elections.
+The goal of electuk1920s database is to allow you to build a database, which is included as an RDS file in the repo, of 1920s election data. This includes the 1922,1923,1924 and 1929 General Elections. The data can be navigated with the installation of dplyr. To interact with the data, simply filter for either one of these variables: 
+
+Constituency: Seat name 
+Party: Party name
+Candidate: Candidate name
+Votes: Number of votes
+Percentages: Percentage vote share 
+Year: Year of election
+Latitute
+Longitude
+
+The data is meant to be called using seat and year with each set organised in a tabular fashion. There may be a need to use stringr to further narrow down searches in some instances. 
 
 ## Installation
 

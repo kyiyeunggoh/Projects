@@ -258,3 +258,4 @@ max(as.numeric(rawvotes$Votes))
 
 #The most number of votes won by a candidate was 101 550 votes.
 
+
