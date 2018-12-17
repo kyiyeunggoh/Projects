@@ -10,6 +10,6 @@ Repository of all my projects
 
 **To be uploaded:**
 1. ANALYSIS: How does the urban-rural divide shape opinions of public confidence towards the Malaysian government? A project using the World Values Survey Wave 6 cross-sectional data. 
-2. ANALYSIS: Trust in religious authorities in the United States across time (Sketch) 
+2. ANALYSIS: Trust in religious authorities in the United States across time (Rough project) 
 =======
 
