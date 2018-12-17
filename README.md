@@ -6,7 +6,7 @@ Repository of all my projects
 2. DATA AND FUNCTION: 1920s UK Parliamentary election database using HTML webscrape, Google Maps API calls. Two functions are also available, get_latlong helps retrieve the location coordinates of input into function. 
 
 **In progress:**
-1. MODEL: Project on predicting threats to public health from unclean restaurants in New York City 
+1. MODEL: Project on predicting threats to public health from unclean restaurants in New York City - includes handcoded ZIP-code level data, modified New York City rats data and Google Location API calls for restaurant ratings and prices.
 
 **To be uploaded:**
 1. ANALYSIS: How the urban-rural divide shape opinions of public confidence towards the Malaysian government? A project using the World Values Survey Wave 6 cross-sectional data 
