@@ -3,10 +3,16 @@ library(readr)
 library(e1071)
 library(pscl)
 library(lmtest)
+library(tidyverse)
+library(readxl)
+library(pastecs)
 
+zipdata<-read_xlsx("ZIPLandArea.xlsx")
 restcomball <- read_csv("restcomball.csv")
 opendataclean <- read_csv("opendataclean.csv")
 fullsetselect<- read_csv("combcleaned.csv")
+fullsetselectplus<-read_rds("combcleanedwithZIP.rds")
+original<-read_csv("nycrestinspect.csv")
 
 #Cleaning API Calls to match general data form
 restcomball<-restcomball%>%
@@ -39,7 +45,7 @@ fullset$violationtype<-as.factor(fullset$violationtype)
 fullset$criticalscore<-as.factor(fullset$criticalscore)
 
 fullsetselect<-fullset%>%
-  select(Name, Address, ACTION, SCORE, violationtype,Rate, criticalscore, Rating)
+  select(Name, Address, ACTION, SCORE, violationtype,Rate, criticalscore, Rating, ZIPCODE)
 
 fullsetselect<-na.omit(fullsetselect)
 
@@ -51,24 +57,32 @@ model1<-glm(ACTION~SCORE+as.factor(violationtype)+log(Rate)
 
 summary(model1)
 
-write_csv(fullsetselect, "combcleaned.csv")
+write_rds(fullsetselectplus, "combcleanedwithZIP.rds")
+write_rds(zipdata,"nyczipdata.rds")
 
+zipdata<-na.omit(zipdata)
+zipdata<-zipdata%>%
+  filter(!(hhincome=="NA"))
 
-fullsetselect$ACTION<-as.factor(fullsetselect$ACTION)
-fullsetselect$violationtype<-as.factor(fullsetselect$violationtype)
-fullsetselect$criticalscore<-as.factor(fullsetselect$criticalscore)
+#Merge with new data on median HH income in ZIP code 
+fullsetselectplus<-merge(fullsetselect,zipdata, by.x="ZIPCODE",by.y="ZIPCODE",all.x = TRUE)
+fullsetselectplus<-fullsetselectplus%>%
+  filter(!(criticalscore=="Not Applicable"))
+fullsetselectplus$ACTION<-as.factor(fullsetselectplus$ACTION)
+fullsetselectplus$violationtype<-as.factor(fullsetselectplus$violationtype)
+fullsetselectplus$criticalscore<-as.factor(fullsetselectplus$criticalscore)
+fullsetselectplus$hhincome<-as.numeric(fullsetselectplus$hhincome)
+fullsetselectplus$SCORE<-as.numeric(fullsetselectplus$SCORE)
+fullsetselectplus<-na.omit(fullsetselectplus)
+
 
 ## Training and cleaning 
-Train <- createDataPartition(fullsetselect$ACTION, p=0.65, list=FALSE)
-training <- fullsetselect[ Train, ]
-testing <- fullsetselect[ -Train, ]
+Train <- createDataPartition(fullsetselectplus$ACTION, p=0.65, list=FALSE)
+training <- fullsetselectplus[Train, ]
+testing <- fullsetselectplus[ -Train, ]
 
-mod_fit<-train(ACTION~SCORE+violationtype+log(Rate)
-            +criticalscore+Rating, data=training, 
-            method="glm",family="binomial")
-
-mod_fit_two<-train(as.factor(ACTION)~SCORE+as.factor(violationtype)+log(Rate)
-                 +Rating, data=training, method="glm",family="binomial")
+mod_fit<-train(ACTION ~ SCORE+as.factor(violationtype)+Rating+as.factor(criticalscore)+ log(hhincome) + log(Rate), data=training, 
+            method="glm", family="binomial")
 
 exp(coef(mod_fit$finalModel))
 
@@ -76,24 +90,19 @@ varImp(mod_fit)
 
 plot(varImp(object=mod_fit),main="RF - Variable Importance")
 
-predictions=predict.train(object=mod_fit,testing[,"ACTION"],type="prob")
+pred = predict(mod_fit, newdata=testing)
 
 mod_fit_one <- glm(ACTION~SCORE+as.factor(violationtype)+log(Rate)
-                   +as.factor(criticalscore)+Rating, data=training, family="binomial")
-
-mod_fit_two<-glm(ACTION~SCORE+as.factor(violationtype)+log(Rate)
-                 +Rating, data=training, family="binomial")
-
-anova(mod_fit_two, mod_fit_one, test ="Chisq") #drop critical score
-
-pR2(mod_fit_two)
-
-pred = predict(mod_fit, newdata=testing)
-pred2 = predict(mod_fit_two,newdata = testing)
+                   +as.factor(criticalscore)+Rating+log(hhincome), data=training, family="binomial")
+summary(mod_fit_one)
+pR2(mod_fit_one)
 
 #Confusion matrix
 confusionMatrix(pred,testing$ACTION)
 table(pred)
+ctable <- as.table(matrix(c(54315, 1260, 283, 506), nrow = 2, byrow = TRUE))
+fourfoldplot(ctable, color = c("#CC6669", "#99CC99"),
+             conf.level = 0, margin = 1, main = "Confusion Matrix")
 
 #Visuals
 preds <- predict(mod_fit_two, newdata = testing, type = 'response',se = TRUE)
@@ -108,3 +117,41 @@ ggplot(testing,aes(x = SCORE , y = as.factor(ACTION))) +
   geom_ribbon(data = testing,aes(y = pred.full, ymin = ymin, ymax = ymax),alpha = 0.25) +
   geom_line(data = testing,aes(y = pred.full),colour = "blue")
 
+
+## Looking at nth and (n-1) inspection
+original_reinspect<-original %>%
+  filter(str_detect(`INSPECTION TYPE`, "Re-inspection"))%>%
+  arrange(CAMIS)
+
+original_reinspect$previnspect <- c(NA, original_reinspect$`INSPECTION DATE`[-nrow(original_reinspect)])
+original_reinspect$prevstatus<- c(NA, original_reinspect$ACTION[-nrow(original_reinspect)])
+original_reinspect$prevscore<-c(NA, original_reinspect$SCORE[-nrow(original_reinspect)])
+
+original_reinspect_closed<-original_reinspect%>%
+  filter(str_detect(ACTION, "C|closed"))
+
+
+original_reinspect_closed$prevstatus<-str_detect(original_reinspect_closed$prevstatus, "[Clc]losed")
+original_reinspect_closed$prevstatus<-as.numeric(original_reinspect_closed$prevstatus)
+sum(original_reinspect_closed$prevstatus==0)
+original_reinspect_closed_prevopen<-original_reinspect_closed%>%
+  filter(prevstatus=="0")
+original_reinspect_closed_prevopen<-original_reinspect_closed_prevopen%>%
+  mutate(scorediff=SCORE-prevscore)
+stat.desc(original_reinspect_closed_prevopen$prevscore)
+stat.desc(original_reinspect_closed_prevopen$SCORE)
+
+a<-original_reinspect_closed_prevopen %>%
+  group_by(`ZIPCODE`, sort=TRUE) %>% 
+  count(.)
+
+original_reinspect_closed_prevclosed<-original_reinspect_closed%>%
+  filter(prevstatus=="1")
+original_reinspect_closed_prevclosed<-original_reinspect_closed_prevclosed%>%
+  mutate(scorediff=SCORE-prevscore)
+stat.desc(original_reinspect_closed_prevclosed$prevscore)
+stat.desc(original_reinspect_closed_prevclosed$SCORE)
+
+a<-original_reinspect_closed_prevclosed %>%
+  group_by(BORO, sort=TRUE) %>% 
+  count(.)
