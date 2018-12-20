@@ -1,0 +1,285 @@
+---
+title: "Exploration of confidence in religious institutions across time in the United States"
+author: "Kyi Yeung Goh"
+date: "29/11/2018"
+output:
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+setwd("/Users/pyeungyeung/Desktop/Columbia/Fall 18/Time Series/Lab 3")
+library(corrplot)
+library(reshape2)
+library(forecast)
+library(sandwich)
+library(ggplot2)
+library(readr)
+library(tidyverse)
+library(zoo)
+library(lmtest)
+library(car)
+library(fUnitRoots)
+GSS <- read_csv("trends-gss.csv")
+options(scipen=999)
+meltMyTS <- function(mv.ts.object, time.var, keep.vars){
+  # mv.ts.object = a multivariate ts object
+  # keep.vars = character vector with names of variables to keep 
+  # time.var = character string naming the time variable
+  require(reshape2)
+  
+  if(missing(keep.vars)) {
+    melt.dat <- data.frame(mv.ts.object)
+  }
+  else {
+    if (!(time.var %in% keep.vars)){
+      keep.vars <- c(keep.vars, time.var)
+    }
+    melt.dat <- data.frame(mv.ts.object)[, keep.vars]
+  }
+  melt.dat <- melt(melt.dat, id.vars = time.var)
+  colnames(melt.dat)[which(colnames(melt.dat) == time.var)] <- "time"
+  return(melt.dat)
+}
+
+ggMyTS <- function(df, varlist, line = TRUE, point = TRUE, pointsize = 3, linewidth = 1.25, ...){
+  require(ggplot2)
+  # varlist = character vector with names of variables to use
+  if(missing(varlist)){
+    gg <- ggplot(df, aes(time, value, colour = variable)) 
+  }
+  else{
+    include <- with(df, variable %in% varlist)
+    gg <- ggplot(df[include,], aes(time, value, colour = variable))   
+  }
+  if(line == FALSE & point == FALSE) {
+    stop("At least one of 'line' or 'point' must be TRUE") 
+  }
+  else{
+    if(line == TRUE) gg <- gg + geom_line(size = linewidth, aes(color = variable), ...)
+    if(point == TRUE) gg <- gg + geom_point(size = pointsize, aes(color = variable), ...)
+  }
+  
+  gg + xlab("") + theme(legend.position = "bottom") + scale_x_continuous(breaks = min(df$time):max(df$time))
+} 
+
+firstD <- function(var, group, df){
+  bad <- (missing(group) & !missing(df))
+  if (bad) stop("if df is specified then group must also be specified")
+  
+  fD <- function(j){ c(NA, diff(j)) }
+  
+  var.is.alone <- missing(group) & missing(df)
+  
+  if (var.is.alone) {
+    return(fD(var))
+  }
+  if (missing(df)){
+    V <- var
+    G <- group
+  }
+  else{
+    V <- df[, deparse(substitute(var))]
+    G <- df[, deparse(substitute(group))]
+  }
+  
+  G <- list(G)
+  D.var <- by(V, G, fD)
+  unlist(D.var)
+}
+```
+
+```{r warning=FALSE}
+vars <- c("year", "trust", "conclerg", "sex", "age", "partyid", "marital"
+          , "educ", "realinc","race")
+sub <- GSS[, vars]
+
+sub <- mutate(sub, 
+              ntrust = ifelse(trust == 1, 1, 0), 
+              clerg = ifelse(conclerg == 1,1,0),
+              college = ifelse(educ >= 13, 1, 0),
+              white = ifelse(race == 1,1,0),
+              married = ifelse(marital== 1,1,0),
+              income = realinc)
+
+
+# get means by year
+by.year <- aggregate(subset(sub, sel = -year), list(year = sub$year), mean, na.rm = T)
+
+
+# interpolate for some missing years
+# add the extra years
+by.year[30:40, "year"] <- c(1979, 1981, 1992, 1995, seq(1997, 2009, 2))
+by.year <- arrange(by.year, year)
+
+# make a time series object by.year.ts and interpolate using na.approx
+by.year.ts <- ts(by.year)
+by.year.ts <- na.approx(by.year.ts)
+
+by.year.ts <- as.data.frame(by.year.ts)
+by.year.ts <- mutate(by.year.ts, 
+                     white_pct = white*100,
+                     clerg_pct=clerg*100,
+                     trust_pct = ntrust*100,
+                     col_pct = college*100,
+                     married_pct=married*100)
+
+
+# correlations
+cor.vars <- c("white_pct", "col_pct", "age", "income",
+              "year", "trust_pct", "partyid","clerg_pct", "married_pct")
+cor.dat <- by.year.ts[, cor.vars]
+corrplot(cor(cor.dat))
+```
+For this, I wanted to look at the relationship between confidence in religious organisations (confclerg) and several predictor variables across time. Here, I looked at trust in members of society (a continuous variable that was recoded to a binary where 1 = TRUST and 0 = NO TRUST), education (where college education of at least 1 year = 1 and below = 0), race (white = 1 and others =0), married (married = 1 and not =0), party identification (continuous variable where 0 is strong democrat and 7 is strong republican), sex and age. The outcome variable, confidence in the clergy, was recoded as a binary variable where strong confidence is 1 and others is 0. For ease of interpretation I recoded all variables except age, sex, income into percentage terms. 
+
+I have also plotted a correlogram in the figure above. 
+
+```{r warning=FALSE}
+keep.vars <- c("white_pct", "col_pct", "age", 
+               "income", "year", "trust_pct", "partyid",
+               "clerg_pct", "married_pct")
+plot.dat <- meltMyTS(mv.ts.object = by.year.ts, time.var = "year", keep.vars = keep.vars)
+
+(g_clerg_pct <- ggMyTS(df = plot.dat, varlist = 
+                         c("clerg_pct"))) #Strong trust in clergy over time 
+(g_age <- ggMyTS(df = plot.dat, varlist = 
+                   c("age"))) #Average respondent age over time
+(g_degreelt50_pct <- ggMyTS(df = plot.dat, varlist = 
+                              c("col_pct"))) #Average percentage of respondents with at least 1 year of college over time
+(g_degreelt50_pct <- ggMyTS(df = plot.dat, varlist = 
+                              c("income"))) #Average income of respondents over time
+(g_degreelt50_pct <- ggMyTS(df = plot.dat, 
+                            varlist = c("married_pct"))) #Average percentage of respondents who are married over time
+```
+
+```{r}
+lm.clerg<-lm(clerg_pct ~ col_pct + married_pct + age + 
+               income + partyid, data=by.year.ts)
+summary(lm.clerg, scientific=FALSE)
+bptest(lm.clerg) #no reason to reject null hyppthesis 
+
+# look for autocorrelation in errors
+e <- lm.clerg$resid
+acf(e) 
+acf(e, xlim = c(1,8), col = "red", lwd = 2) # can also customize acf output
+plot(e) # plot residuals over time
+dwtest(lm.clerg) # Durbin-Watson test
+bgtest(lm.clerg) # Breusch-Godfrey test
+durbinWatsonTest(lm.clerg, max.lag=2) # Durbin-Watson with more lags
+```
+A pooled OLS of yearly data suggests that there exists only one significant relationship that between strong confidence in religious institutions and party identification. In this case a one point increase (meaning more Republican) amongst respondents is associated with a 14 percentage point decrease (*) in the percentage of respondents who strongly support the clergy controlling for education, marraige, age and income. There are too other weakly significant relationships. The first is between age and strong support for the clergy with a one year increase in age of respondents resulting in a 1.789 decrease (.)  in the percentage of respondents who strongly support the clergy controlling for education, marriage, income and party identification. The other is that between marriage and strong support for the clergy. A one percentage increase in the number of respondent who are married results in a 0.380 increase in the percent of respondents who will strongly support the clergy controlling for all other predictor variables. The Durbin-Watson test suggests that there is indeed autocorrelation and that there needs to be a lag of order 2 to resolve it. 
+
+
+```{r}
+# include year trend
+lm.clerg2 <- update(lm.clerg, ~ . + year)
+summary(lm.clerg2)
+
+# look for autocorrelation
+e2 <- lm.clerg2$resid
+acf(e2, xlim = c(1,8), col = "red", lwd = 2)
+pacf(e2, xlim = c(1,8), col = "red", lwd = 2)
+plot(e2)
+dwtest(lm.clerg2)
+bgtest(lm.clerg2)
+durbinWatsonTest(lm.clerg2, max.lag=3)
+vif(lm.clerg2)
+```
+I have included a year trend in this regression and in this case, the year trend has a negative relationship with strong support of religious institutions net of all other predictor variables. It is, however, not statistically significant. Party identification continues to remain statistically significant (*) at the 95% level net of all other factors and any point in time. The Durbin-Watson statistic suggests the presence of autocorrelation and that an order of 2 lags is needed to resolve it. Unsurprisingly, VIF (indicating multicollinearity or the inflation of R2 caused by predictors explaining same variance) is particularly high for percent of college educated persons and year trend. This suggests that the model needs to be simplified or re-specified. 
+
+```{r}
+# add some more predictors
+lm.clerg3 <- update(lm.clerg2, ~ . + trust_pct + white_pct )
+summary(lm.clerg3)
+vif(lm.clerg3) # variance inflation factor 
+durbinWatsonTest(lm.clerg3, max.lag=2)
+```
+This regression adds additional predictor variables *white_pct* (indicating the percentage of respondents who were white) and *trust_pct* (percentage of respondents who trusted people generally) to the model. With more predictor variables added into the model, partyid reduces in statistical significance (.) and is now only at the 90% level. Percentage of trust in respondents is a very weakly significant predictor at the 90% level. Here, a 1 percent increase in trust leads to a 0.579 percent increase in total number of respondents who have strong confidence in the clergy holding all other factors and time constant. The model, while explaining around 65% of total variance, is hampered by the existence of very high VIF scores on college and the year variables. The D-W statistic, meanwhile, suggests a lag of order 2 in order to resolve autocorrelation. 
+
+
+```{r error=TRUE}
+by.yearFD <- mutate(data.frame(by.year.ts),
+                       age = firstD(age),
+                       col_pct = firstD(col_pct),
+                       income = firstD(income),
+                       white_pct=firstD(white_pct),
+                       married_pct=firstD(married_pct),
+                       partyid=firstD(partyid),
+                       clerg_pct=firstD(clerg_pct),
+                       trust_pct = firstD(trust_pct),
+                       year = year)
+
+lm.clerg4 <- update(lm.clerg3, data = by.yearFD)
+summary(lm.clerg4)
+vif(lm.clerg4)
+e4 <- lm.clerg4$resid
+acf(e4, xlim = c(1,6), col = "red", lwd = 2)
+pacf(e4, xlim = c(1,6), col = "red", lwd = 2)
+auto.arima(e4, trace=TRUE)
+```
+I then ran a first difference model, a potential solution for the VIF in the previous models. In this case, there are only 2 statistically significant predictors of strong support for religious institutions. For each percentage change in the percentage of married respondents, the percentage of respondents who have strong confidence in religious institutions increases by 1.177 net of all other Xs and at any point in time. This relationship is significant at the 90% level. Meanwhile, for each percentage change in the respondents who trust persons results in a 0.6486 percentage point positive change in the percentage points of persons who have strong confidence in religious institutions net of all other Xs and time. It is crucial to point out that the adj-R2 has dipped significantly, only explaining around 27% of total variance. This gels well with the fact that the VIFs of all predictor variables are now well below 10, indicating a resolution of the problem of multicollinearity raised in previous parts. 
+
+The auto-arima suggests two lags along with 1 lagged average of e-s in this model. I will re-run this model with the suggested ARIMA in part 9. 
+
+```{r error=TRUE}
+by.yearFD <- mutate(data.frame(by.year.ts),
+                       trust_pct = firstD(trust_pct),
+                       age = firstD(age),
+                       col_pct = firstD(col_pct),
+                       income = firstD(income),
+                       white_pct=firstD(white_pct),
+                       married_pct=firstD(married_pct),
+                       partyid=firstD(partyid),
+                       clerg_pct=firstD(clerg_pct),
+                       year = year)
+
+lm.clerg4 <- update(lm.clerg3, data = by.yearFD)
+
+adfTest(by.year.ts[,"clerg_pct"], lags = 0, type="ct")
+adfTest(by.year.ts[,"clerg_pct"], lags = 4, type="ct")
+coeftest(lm.clerg4, vcov = NeweyWest(lm.clerg3, lag = 2))
+```
+With 0 lags, there is no reason to reject the null of there being unit root. Even with 4 lags, there continues to be no reason to do so. There is thus a unit root. This suggests that first-differencing is a very compelling way in which to resolve this problem. 
+
+
+```{r error=TRUE}
+by.yearFD <- mutate(data.frame(by.year.ts),
+                       trust_pct = firstD(trust_pct),
+                       age = firstD(age),
+                       col_pct = firstD(col_pct),
+                       income = firstD(income),
+                       white_pct=firstD(white_pct),
+                       married_pct=firstD(married_pct),
+                       partyid=firstD(partyid),
+                       clerg_pct=firstD(clerg_pct),
+                       year = year)
+
+lm.clerg4 <- update(lm.clerg3, data = by.yearFD)
+auto.arima(e4, trace=TRUE)
+```
+The model (from FD model using error from that) that removes all sources of systematic error in the data, whether from non-stationarity, or autoregressive tendencies and/or moving average processes in the errors is a first difference model that contains 2 lags with 1 lagged average of the error term. This means that the final model involves two lags of the error term, 1 difference (in the original FD model) and 1 lagged average of the error term. The interpretation of this model will be done in part 9 below. 
+
+```{r error=TRUE}
+by.yearFD <- mutate(data.frame(by.year.ts),
+                       trust_pct = firstD(trust_pct),
+                       age = firstD(age),
+                       col_pct = firstD(col_pct),
+                       income = firstD(income),
+                       white_pct=firstD(white_pct),
+                       married_pct=firstD(married_pct),
+                       partyid=firstD(partyid),
+                       clerg_pct=firstD(clerg_pct),
+                       year = year)
+
+lm.clerg4 <- update(lm.clerg3, data = by.yearFD)
+xvars.fat <- by.yearFD[,c("trust_pct", "age", "col_pct","income",
+                          "white_pct", "married_pct","partyid", "year")]
+
+# ARIMA(2,0,1) = OLS
+arima.001 <- arima(by.yearFD[,"clerg_pct"], order = c(2,0,1), xreg = xvars.fat)
+arima.001
+
+Box.test(resid(arima.001), lag = 13, type = c("Ljung-Box"), fitdf = 0)
+```
+Notice that this is essentially a first difference model with two lags and one lagged average of the error. The interpretation is thus as follows. The two significant predictors in this model is white_pct and married_pct. For white_pct, a one percent change in the number of white persons in the wave results in a 0.7180 percentage point change in the percentage of the sample who are very confident of their religious leaders net of all other Xs, the time trend, the first and second lag of clerg_pct and the previous lag of the error term. Meanwhile, a one percent change in the number of married respondents in the wave results in a 0.5006% negative change in the percentage of the sample who are very confident of their religious leaders net of all other Xs, the time trend, the first and second lag of clerg_pct and the previous lag of the error term.The box-ljung test (parameter of 16 which is half of the total number of points -2) is not significant and we cannot rejec the null that the residuals is simply white noise, meaning autocorrelation appears to not be a problem. 
