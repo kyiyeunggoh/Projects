@@ -9,7 +9,7 @@ Repository of all my projects
 5. ANALYSIS: Trust in religious authorities in the United States across time (Rough project) 
 
 **In progress:**
-1. Exploration about the tension between party and country identification in the United States over time
+1. ANALYSIS: Exploration about the tension between party and country identification in the United States over time
 
 **To be uploaded:**
 
