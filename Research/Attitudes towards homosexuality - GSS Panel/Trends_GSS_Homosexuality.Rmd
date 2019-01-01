@@ -6,8 +6,9 @@ output:
   html_document:
   keep_md: true
 ---
+
 ```{r, include=FALSE}
-setwd("~/Desktop/Github Projects/Projects/Research/Time Series Project")
+setwd("~/Desktop/Github Projects/Projects/Research/Attitudes towards homosexuality - GSS Panel")
 library(corrplot)
 library(reshape2)
 library(forecast)
