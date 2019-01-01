@@ -3,7 +3,7 @@ Repository of all my projects
 
 **Available:**
 
-**FUNCITON**
+**FUNCTION**
 1. FUNCTION: PPP extractor that extracts PPP data from the OECD package.
 2. DATA AND FUNCTION: 1920s UK Parliamentary election database using HTML webscrape, Google Maps API calls. Two functions are also available, *get_latlong* helps retrieve the location coordinates of input from Google Locations API into function. 
 
