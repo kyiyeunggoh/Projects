@@ -1,7 +1,7 @@
 # Projects
 Repository of all my projects
 
-**Currently available:**
+**Available:**
 1. FUNCTION: PPP extractor that extracts PPP data from the OECD package
 2. DATA AND FUNCTION: 1920s UK Parliamentary election database using HTML webscrape, Google Maps API calls. Two functions are also available, *get_latlong* helps retrieve the location coordinates of input from Google Locations API into function. 
 3. ANALYSIS: How does the urban-rural divide shape opinions of public confidence towards the Malaysian government? A project using the World Values Survey Wave 6 cross-sectional data. 
