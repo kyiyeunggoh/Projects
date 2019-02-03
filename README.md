@@ -14,7 +14,8 @@ Repository of all my projects
 4. ANALYSIS AND PREDICTIVE MODELLING: Project on predicting threats to public health from unclean restaurants in New York City - includes data from the Department of Health and Mental Hygeine, Census data, handcoded ZIP-code level data on income and land area, modified New York City rats data and Google Location API calls for restaurant ratings and prices.
 
 **VISUALISATION**
-1. VISUALISATION: Density plot on QGIS for 311 Calls regarding sewer maintainance in New York.
+1. VISUALISATION: Density plot on QGIS for 311 Calls regarding sewer maintainance in NYC.
+2. VISUALISATION: QGIS exploratory plot interrogating relationship between gentrification, crime and public housing in NYC. 
 
 **In progress:**
 
