@@ -16,6 +16,7 @@ Repository of all my projects
 **VISUALISATION**
 1. VISUALISATION: Density plot on QGIS for 311 Calls regarding sewer maintainance in NYC.
 2. VISUALISATION: QGIS exploratory plot interrogating relationship between gentrification, crime and public housing in NYC. 
+3. VISUALISATION: Project based on 10-day worth of personal data related to location and spending. Project used in architecture class to think about the visualisation process from concept, data collection, initial sketches, data analysis and the final visual product. A link can be found here: [](http://htmlpreview.github.io/ https://github.com/kyiyeunggoh/kyiyeunggoh.github.io/blob/master/Project%201/Personal_data_project.html)
 
 **In progress:**
 
