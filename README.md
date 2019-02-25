@@ -12,7 +12,7 @@ Repository of all my projects
 2. ANALYSIS: Trust in religious authorities in the United States across time (Rough project) using 2010's GSS panel.
 3. ANALYSIS: Exploration about the changing attitudes towards alternative sexual behavior in US from 1972 to 2016 using GSS panel data. 
 4. ANALYSIS AND PREDICTIVE MODELLING: Project on predicting threats to public health from unclean restaurants in New York City - includes data from the Department of Health and Mental Hygeine, Census data, handcoded ZIP-code level data on income and land area, modified New York City rats data and Google Location API calls for restaurant ratings and prices.
-5. ANALYSIS AND TOOL: Analysis of 2017 CDC cross-sectional data, looking at mental health traits and using this to produce a prototype diagnosis tool for early intervention in cases of mental distress.
+5. ANALYSIS AND TOOL: Analysis of 2017 CDC cross-sectional data, looking at mental health traits and using this to produce a prototype diagnosis tool for early intervention in cases of mental distress. (Finalist project @ Brown Datathon 2019)
 
 **VISUALISATION**
 1. VISUALISATION: Density plot on QGIS for 311 Calls regarding sewer maintainance in NYC.
