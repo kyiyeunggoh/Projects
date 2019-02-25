@@ -5,7 +5,7 @@ Repository of all my projects
 
 **FUNCTION**
 1. FUNCTION: PPP extractor that extracts PPP data from the OECD package.
-2. DATA AND FUNCTION: 1920s UK Parliamentary election database using HTML webscrape, Google Maps API calls. Two functions are also available, *get_latlong* helps retrieve the location coordinates of input from Google Locations API into function. 
+2. DATA AND FUNCTION: 1920s UK Parliamentary election database using HTML webscrape, Google Maps API calls. Two functions are also available, *get_latlong* is a generic API function that helps to retrieve the location coordinates of input from Google Locations API into function while polres_scraper is a purpose-built webscraper for the polres website. 
 
 **ANALYSIS**
 1. ANALYSIS: How does the urban-rural divide shape opinions of public confidence towards the Malaysian government? A project using the World Values Survey Wave 6 cross-sectional data. 
