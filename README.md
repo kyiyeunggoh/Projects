@@ -21,7 +21,7 @@ Repository of all my projects
 
 **In progress:**
 1. VISUALISATION AND ANALYSIS: New York 311 Calls Data (Public)
-2. VISUALISATION: Re-making [Minard's map](https://bigthink.com/strange-maps/229-vital-statistics-of-a-deadly-campaign-the-minard-map) in the Chinese context
+2. VISUALISATION: Re-creating [Minard's map](https://bigthink.com/strange-maps/229-vital-statistics-of-a-deadly-campaign-the-minard-map) in politically sensitive time periods
 
 **To be uploaded:**
 
