@@ -19,7 +19,7 @@ Repository of all my projects
 2. VISUALISATION: QGIS exploratory plot interrogating relationship between gentrification, crime and public housing in NYC. 
 3. VISUALISATION: Project based on 10-day worth of personal data related to location and spending. Project used in architecture class to think about the visualisation process from concept, data collection, initial sketches, data analysis and the final visual product. A link can be found here: [Project visualisation](http://htmlpreview.github.io/?https://github.com/kyiyeunggoh/kyiyeunggoh.github.io/blob/master/Project%201/Personal_data_project.html)
 4. VISUALISATION: Working with d3 and R to look at trends in [animal abuse cases in New York.](https://kyiyeunggoh.github.io/Assignments%20/Project%202/DV_Public_Data.html)
-5. VISUALISATION: Working with d3 and R to look at scraped travel data to [reveal patterns in foreign and domestic policy for Chinese Presidents.](https://kyiyeunggoh.github.io/Assignments /Combined project/huxitravel.html)
+5. VISUALISATION: Working with d3 and R to look at scraped travel data to [reveal patterns in foreign and domestic policy for Chinese Presidents.](https://kyiyeunggoh.github.io/Assignments%20/Combined%20project/huxitravel.html)
 
 **In progress:**
 1. VISUALISATION AND ANALYSIS: New York 311 Calls Data (Public)
